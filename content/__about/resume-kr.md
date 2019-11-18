@@ -1,7 +1,7 @@
 ---
 title: 'about'
 date: 2019-11-19 02:00:11
-lang: 'en'
+lang: 'kr'
 ---
 
 # Gyeongeon Yun (Fleta)
