@@ -7,6 +7,7 @@ category: 'Tech'
 
 이번에 AWS lightsail + Route53, ghost 로 블로그를 새로 만들게 되었다. 블로그를 세팅하는 과정에 대해 기록한다.
 
+
 ## 1. Amazon lightsail
 
 [Amazon Lightsail page](https://aws.amazon.com/ko/lightsail/) 에서 Lightsail에 대한 소개를 볼 수 있다.

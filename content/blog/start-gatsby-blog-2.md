@@ -7,9 +7,6 @@ category: 'Tech'
 이전 글에서는 Gatsby가 무엇인지 아주 대충 알아봤다. 이번 블로그에서는 내가 이 블로그를 어떻게 세팅했는지 기록한다.
 
 
----
-
-
 ## 1. 개발환경 세팅
 
 Gatsby 템플릿을 하나 사용한다. 나는 [gatsby-starter-bee](https://github.com/JaeYeopHan/gatsby-starter-bee) 템플릿을 사용했다. 포크해서 따로 repository를 관리하고 있다. fork한 뒤에는 아래처럼 개발환경을 세팅할 수 있다.

@@ -7,9 +7,6 @@ category: 'Tech'
 기존 블로그는 Ghost라는 CMS를 사용한 블로그였다. 그러나 내가 블로그를 사용하면서 하는 일은 markdown 문서를 먼저 만들고 그걸 ghost의 편집기에 붙여넣어서 포스팅을 하는 일 뿐이었다. 이게 전부라면 굳이 CMS를 쓰지 않고 정적 HTML만 생성하고 AWS가 아닌 다른 무료 호스팅 서비스를 이용해도 될 것이었다. 그래서 이 참에 블로그를 바꾸기로 결심하였고, Gatsby로 만드는 블로그를 Netlify를 통해 배포하였다. 블로그는 https://github.com/Fleta/fleta.log 레포지토리를 통해 관리되며 이는 [다른 유저](https://github.com/JaeYeopHan)분이 Gatsby-starter-blog를 이용해 만들어주신 블로그 템플릿을 fork 하여 만들었다. 이 과정에서 Gatsby에 대한 이해가 좀 부족한 것 같아 찾아보았고, 나름 정리한 내용을 블로그에 남겨보고자 한다.
 
 
----
-
-
 ## 1. 정적 사이트 생성기
 
 가장 널리 알려진 정적 사이트 호스팅 서비스는 [Github Pages](https://pages.github.com/)인데, markdown을 html 형태로 바꿔서 Github Pages로 배포하기 위해서 사용하는 툴 중 하나가 [Jekyll](https://jekyllrb-ko.github.io/)이고, 이런 툴들을 보고 정적 사이트 생성기라고 부른다. 
