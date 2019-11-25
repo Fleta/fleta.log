@@ -10,11 +10,11 @@ category: 'Tech'
 ---
 
 
-### 1. 정적 사이트 생성기
+## 1. 정적 사이트 생성기
 
 가장 널리 알려진 정적 사이트 호스팅 서비스는 [Github Pages](https://pages.github.com/)인데, markdown을 html 형태로 바꿔서 Github Pages로 배포하기 위해서 사용하는 툴 중 하나가 [Jekyll](https://jekyllrb-ko.github.io/)이고, 이런 툴들을 보고 정적 사이트 생성기라고 부른다. 
 
-### 2. Gatsby
+## 2. Gatsby
 
 이 글에서 Gatsby라고 부르는 [Gatsby JS](https://www.gatsbyjs.org/)는 React.js와 GraphQL을 사용한 정적 웹사이트 생성기이다. Javascript로 개발을 하고, Gatsby 자체에서 API를 제공하며, Markdown 이라는 Markup 언어를 사용할 수 있다. 이런 Stack을 보고 JAM Stack라고들 부르더라. Gatsby에 대한 내용을 찾아보면서 꽤 자주 보였던 단어였다.
 
@@ -22,7 +22,7 @@ category: 'Tech'
 
 Gatsby의 경우 위의 구조와 같이 되어있는데, Datasource로부터 데이터를 가져오는데 GraphQL을 이용하고 있다. 이를 통해 가져온 데이터를 이용해 React를 통해 웹사이트를 만든다.
 
-### 3. 대충 어떻게 사용하는지
+## 3. 대충 어떻게 사용하는지
 
 ```
 npm install -g gatsby-cli

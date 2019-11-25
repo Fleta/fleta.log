@@ -11,7 +11,10 @@ doriko 노래. 2010년에 발매된 `로미오와 신데렐라` 앨범에 수록
 원본 PV를 보면 분위기가 꽤 어둡다. 가사도 어두운 내용을 다루고 있다. 
 어떻게 보면 꽤나 심오(?)한데, 2세대 하츠네미쿠로 들었을 때 보다 개인적으로는 우타이테 커버가 더 마음에 든다. 가장 좋아하는 건 하나땅(YURiCa/花たん)의 `Flower Drops` 앨범에 수록된 버전이어다.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Mqtk3Ooedt4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315"
+src="https://www.youtube.com/embed/videoseries?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG"
+frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
 
 ```
 いつかの日は沈む　明日はもう目覚めなきゃ
