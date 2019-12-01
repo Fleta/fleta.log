@@ -12,15 +12,14 @@ category: 'Tech'
 
 암호화를 한마디로 정의하자면 "수학적인 과정을 통해 정보를 가진 문자열을 의미 없는 문자열로 바꾸는 것" 정도라고 생각한다.
 
-암호화 알고리즘을 설계할 때 Confusion과 diffusion의 성질을 이용한다. 이 성질들을 얻기 위해 substituion과 permutation이 사용되며, 이들을 적절히 조합하여 round를 만들고 구성된 round들을 반복하는 방식으로 암호화가 이루어진다. 
+암호화 알고리즘을 설계할 때 confusion과 diffusion의 성질을 이용한다. 이 성질들을 얻기 위해 substituion과 permutation이 사용되며, 이들을 적절히 조합하여 round를 만들고 구성된 round들을 반복하는 방식으로 암호화가 이루어진다. 
 
-Confusion과 Diffusion에 대해서 간단하게 설명하면..
+Confusion과 diffusion에 대해서 간단하게 설명하면..
 - 통계 및 암호화 분석 방법으로 암호를 분석하기 어렵게 방해하는 성질들
     - 따라서 생성된 값의 역상관관계(decorrelation)가 중요한 해쉬 함수나 의사 난수 생성기의 설계 등에서 중요하게 생각되어야 함.
     - 복잡성은 잘 정의되고 반복된 일련의 substition과 permutation을 통해 구현됨
 - Confusion (혼돈): 암호문과 키 사이의 관계를 가능한 복잡하게 만드는 것
     - 암호문의 각 binary digit(bit)이 키의 여러 부분에 의존성을 가져야 함. 
-    - Block 및 Stream cipher에서 사용됨.
 - Diffusion(확산): 암호문에 대한 평문의 통계적 구조를 소멸시키는 것.
     - 평문의 1 bit를 바꾸면 통계적으로 절반의 암호문 bit가 바뀌어야 함.
         - 암호문의 1 bit를 바꾸어도 통계적으로 절반의 평문 bit도 바뀌어야 함.
@@ -35,22 +34,22 @@ Confusion과 Diffusion에 대해서 간단하게 설명하면..
 
 https://ko.wikipedia.org/wiki/%ED%95%B4%EC%8B%9C_%ED%95%A8%EC%88%98 에 나온 해시 함수에 대한 정의이다. 
 
-정의에도 나와 있듯이 hash는 길이가 다양한 데이터를 고정된 길이의 데이터로 변환하는데, 그렇다보니 Digest의 개수보다 key값이 더 많을 수 밖에 없다. 서로 다른 key를 가지고 hashing해도 같은 값이 나오는 경우가 있을 수 있다. 이를 Hash collision이라고 부른다. 나는 Hash collision이 없는 hash function은 없는 것으로 알고 있다. 디디클레의 원리(비둘기집의 원리)를 생각하면 된다.
+정의에도 나와 있듯이 hash는 길이가 다양한 데이터를 고정된 길이의 데이터로 변환하는데, 그렇다보니 digest의 개수보다 key값이 더 많을 수 밖에 없다. 서로 다른 key를 가지고 hashing해도 같은 값이 나오는 경우가 있을 수 있다. 이를 Hash collision이라고 부른다. 나는 Hash collision이 없는 hash function은 없는 것으로 알고 있다. 디디클레의 원리(비둘기집의 원리)가 이를 증명하는 것으로 보인다.
 
-또한 Hash function을 통해 생성된 Digest로는 원본을 구할수가 없어야 한다. 그래서 Hash function 자체는 암호화를 할 때 이용할 수 있지만 암호화/복호화를 같이 할 수 있게 만들어진 함수가 아니다. 
+또한 hash function을 통해 생성된 digest로는 원본을 구할수가 없어야 한다. 그래서 hash function 자체는 암호화를 할 때 이용할 수 있지만 암호화/복호화를 같이 할 수 있게 만들어진 함수가 아니다. 
 
 Hash algorithm의 종류는 대표적으로 SHA(Secure Hash Algorithm), MD5 (Message Digest) 정도가 있다. 커밋에 붙어있는 해쉬라던가 소프트웨어가 릴리스 될 때 나오는 checksum 등에서 그 예를 찾아볼 수 있다.
 
 
 ## 3. Hash의 단점 및 보완
 
-Hash에는 널리 알려진 단점이 존재한다. Hash collision이 발생하기 때문에 Hash value가 중복되는 입력값을 찾기만 하면 입력값이 같다고 속일 수 있다. Birthday paradox와 접목되면 일부 Algorithm(대표적으로 MD5)에서는 아주 빠른 속도로 중복되는 Hash value를 찾을 수 있게 되는데, 이를 Birthday attack이라고 한다. Hash function자체가 아주 빠른 속도를 가지고 있기 때문에 공격자들이 아주 빠르게 임의의 문자열의 Digest와 해킹할 대상의 Digest를 비교할 수 있다. 
+Hash에는 널리 알려진 단점이 존재한다. Hash collision이 발생하기 때문에 hash value가 중복되는 입력값을 찾기만 하면 입력값이 같다고 속일 수 있다. Birthday paradox와 접목되면 일부 알고리즘(대표적으로 MD5)에서는 아주 빠른 속도로 중복되는 hash value를 찾을 수 있게 되는데, 이를 `birthday attack`이라고 한다. Hash function자체가 아주 빠른 속도를 가지고 있기 때문에 공격자들이 아주 빠르게 임의의 문자열의 digest와 공격할 대상의 digest를 비교할 수 있다. 
 
-이를 보완하기 위해 원문에 임이의 문자열을 붙여서 Hash function을 거치도록 만들 수 있다. 이를 Salting이라고 하고 이 때 붙이는 문자열을 Salt라고 한다. 이 방법을 사용하면 공격자가 Digest를 알아내더라도 Salt와 함께 확인을 하게 되므로 공격자가 Salt까지 찾아야 해서 공격 난이도가 상승한다. [Naver D2의 안전한 패스워드 저장](https://d2.naver.com/helloworld/318732) 글에서는 모든 패스워드가 고유의 Salt를 갖고 Salt의 길이가 32바이트 이상이어야 Salt와 Digest를 추측하기가 어렵다고 얘기하고 있다. 
+이를 보완하기 위해 원문에 임이의 문자열을 붙여서 hash function을 거치도록 만들 수 있다. 이를 `salting`이라고 하고 이 때 붙이는 문자열을 `salt`라고 한다. 이 방법을 사용하면 공격자가 Digest를 알아내더라도 salt와 함께 확인을 하게 되므로 공격자가 Salt까지 찾아야 해서 공격 난이도가 상승한다. [Naver D2의 안전한 패스워드 저장](https://d2.naver.com/helloworld/318732) 글에서는 모든 패스워드가 고유의 salt를 갖고 salt의 길이가 32바이트 이상이어야 salt와 digest를 추측하기가 어렵다고 얘기하고 있다. 
 
-Key stretching을 통해서 Hash function의 속도와 관련된 단점을 보완할 수 있다. Hash function의 수행을 여러번 반복하는 방식이다. 원문을 가지고 Hash function을 통해 Digest를 만들고, 생성된 Digest를 가지고 또 다시 hash function을 거쳐 Digest를 만들고.. 이를 반복하여 하나의 Digest를 생성할 때 어느정도 이상의 시간이 소요되도록 만든다. Rainbow table을 활용한 rainbow attack및 brute force attack으로 패스워드를 추측하기 힘들게 만든다. 마찬가지로 [위에서 언급한 Naver D2의 포스팅](https://d2.naver.com/helloworld/318732) 에 따르면 Key stretching을 적용하면 동일한 장비에서 비교할 수 있는 Digest 수를 격감시켜준다고 한다. 
+Key stretching을 통해서 hash function의 속도와 관련된 단점을 보완할 수 있다. Hash function의 수행을 여러번 반복하는 방식이다. 원문을 가지고 Hash function을 통해 Digest를 만들고, 생성된 digest를 가지고 또 다시 hash function을 거쳐 digest를 만들고.. 이를 반복하여 하나의 digest를 생성할 때 어느정도 이상의 시간이 소요되도록 만든다. Rainbow table을 활용한 rainbow attack및 brute force attack으로 패스워드를 추측하기 힘들게 만든다. 마찬가지로 [위에서 언급한 Naver D2의 포스팅](https://d2.naver.com/helloworld/318732) 에 따르면 Key stretching을 적용하면 동일한 장비에서 비교할 수 있는 Digest 수를 격감시켜준다고 한다. 
 
-Adaptive Key Derivation Function은 Digest 생성 시 Salting과 Key stretching을 반복하고 Salt와 password 외에도 입력값을 더 받아서 공격자가 Digest를 유추하기 더 힘들도록 하는 방법이다. PBKDF2, bcrypt, scrypt등의 방식이 있다고 한다. ([참고](https://d2.naver.com/helloworld/318732)) [Java의 PBEKeySpec](https://docs.oracle.com/javase/8/docs/api/javax/crypto/spec/PBEKeySpec.html)를 사용하면 PBKDF2를 쉽게 적용할 수 있다.
+Adaptive key derivation function은 digest 생성 시 salting과 key stretching을 반복하고 salt와 password 외에도 입력값을 더 받아서 공격자가 digest를 유추하기 더 힘들도록 하는 방법이다. PBKDF2, bcrypt, scrypt등의 방식이 있다고 한다. ([참고](https://d2.naver.com/helloworld/318732)) [Java의 PBEKeySpec](https://docs.oracle.com/javase/8/docs/api/javax/crypto/spec/PBEKeySpec.html)를 사용하면 PBKDF2를 쉽게 적용할 수 있다.
 
 
 ## 4. Symmetric-key algorithm
@@ -73,7 +72,7 @@ Public-key algorithm(공개키 알고리즘)은 위에서 언급한 대칭키 �
 
 ## 6. Advanced Encryption Standard (AES)
 
-과거에 DES가 있었다. Data Encryption Standard라고.. 이름부터 `데이터 암호화 표준` 이고 과거에는 강력했다고 한다. 블록의 단위는 64비트이고 키 길이도 64비트이지만 키는 패리티 비트를 제외하면 56비트이다. 과거의 컴퓨팅 성능에서는 이 길이의 암호문은 강력했지만 현재의 성능을 생각하면 이 길이는 짧다. 취약점 또한 널리 알려져있다. 일단 길이를 언급했듯이 길이가 너무 짧아서 Brute force로도 굉장히 빠른 시간 내에 plain text를 알아낼 수 있으며, 블록 암호를 공격하는 대표적인 방법인 [linear cryptanalysis(선형 공격)](https://en.wikipedia.org/wiki/Linear_cryptanalysis)와 [differntial cryptanalysis](https://en.wikipedia.org/wiki/Differential_cryptanalysis)([차분 공격](http://www.secmem.org/blog/2019/04/08/%EC%B0%A8%EB%B6%84-%EA%B3%B5%EA%B2%A9%EC%9D%98-%EC%9D%B4%ED%95%B4/))에 약하다.
+과거에 DES가 있었다. Data Encryption Standard라고.. 이름부터 `데이터 암호화 표준` 이고 과거에는 강력했다고 한다. 블록의 단위는 64비트이고 키 길이도 64비트이지만 키는 패리티 비트를 제외하면 56비트이다. 과거의 컴퓨팅 성능에서는 이 길이의 암호문은 강력했겠지만 현재의 성능을 생각하면 이 길이는 짧다. 취약점 또한 널리 알려져있다. 일단 길이를 언급했듯이 길이가 너무 짧아서 Brute force로도 굉장히 빠른 시간 내에 plain text를 알아낼 수 있으며, 블록 암호를 공격하는 대표적인 방법인 [linear cryptanalysis(선형 공격)](https://en.wikipedia.org/wiki/Linear_cryptanalysis)와 [differntial cryptanalysis](https://en.wikipedia.org/wiki/Differential_cryptanalysis)([차분 공격](http://www.secmem.org/blog/2019/04/08/%EC%B0%A8%EB%B6%84-%EA%B3%B5%EA%B2%A9%EC%9D%98-%EC%9D%B4%ED%95%B4/))에 약하다.
 
 이를 보완하기 위해 triple DES같은 응용도 나왔다. DES를 세번 적용하고(암호화를 세번 한다는 뜻은 아니다) 키의 길이가 세 배 늘어나지만 DES가 갖는 취약점을 그대로 가진다.
 
