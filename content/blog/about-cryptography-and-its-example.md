@@ -1,7 +1,7 @@
 ---
 title: '암호화에 대한 겉핥기 및 간단한 적용기'
 date: 2019-12-01 20:30:00
-category: 'Tech'
+category: 'Cryptography'
 ---
 
 
@@ -78,4 +78,89 @@ Public-key algorithm(공개키 알고리즘)은 위에서 언급한 대칭키 �
 
 여튼 DES가 안전하지 않다고 증명되어서 새로 고안된 표준이 AES이다. 128bit Block cipher이며, 다양한 길이(128, 192, 256 bit)의 Key를 지원한다. 이 글을 쓰다가 왜 [512bit 같은건 없는지](https://ieeexplore.ieee.org/document/6122835) 검색해 봤는데, 나랑 비슷한 글을 읽고 비슷한 생각을 한 사람이 있던 모양이어서 [함께 공유한다](https://crypto.stackexchange.com/questions/20253/why-we-cant-implement-aes-512-key-size). 공유한 글에 대한 요약은 하지 않겠다.
 
-> WIP (12/2 ~ 3 사이에는 완성..)
+AES 알고리즘은 아래 사진의 순서대로 암호화와 복호화가 이루어진다.
+
+![AES cycle](images/about-cryptography-and-its-example/aes-cycle.png)
+
+- **Add round key**: 한 열씩 데이터와 key를 더하는 과정이다.
+- **Sub bytes(Substitute byte)**: S-box table을 이용해서 byte 단위 형태로 블록을 교환하는 과정이다. Rijndael S-box라고 미리 정의된 테이블이 존재한다. 예를 들어 `0x9a`의 경우 `90`, `0a`의 교차인 b8로 변환된다.
+
+![S-box table](images/about-cryptography-and-its-example/s-box.png)
+> 출처: https://en.wikipedia.org/wiki/Rijndael_S-box
+
+
+- **Shift row**: 행 단위로 shift 연산을 한다. 
+    - 첫 번째 행은 shift되지 않는다.
+    - 두 번째 행부터 네 번째 행까지 각각 1,2,3자리씩 왼쪽으로 Shift한다.
+    - 이 때 byte안의 bit는 그대로 두고 byte를 교환한다 (byte-exchange transformation)
+- **Mix columns**: 열 단위로 각각의 열을 상수 행렬과 곱해서 새로운 값을 가지는 열을 반환한다.
+
+> 참고: 행렬 계산을 할 때 곱연산은 xtime으로, 덧셈은 XOR로 계산한다.
+
+각 round마다 쓰이는 round key가 있는데, 이를 생성하는 과정을 **key schedule**이라고 한다. Key schedule은 입력된 key를 바탕으로 하고 과정은 아래와 같다.
+
+- 입력된 키의 마지막 4바이트를 뽑아 한 칸씩 shift하고 Sub byte 연산을 한다.
+- 그 후 round constant(Rcon)과 XOR연산을 한다. 1 round 마다 하나씩 앞에서부터 순서대로 사용하며 그 다음 key의 첫째 열과 XOR한 결과가 첫째 round key의 첫째 열이 된다.
+
+
+## 7. Java에서의 AES
+
+`javax.crypto` 패키지를 이용하면 위의 과정을 직접 구현하지 않아도 암호화/복호화를 쉽게 할 수 있다. IV와 KEY를 정하고 `javax.crypto.Cipher` 객체를 생성하고 생성한 cipher 객체에 mode, key iv를 세팅한 후 `cipher.doFinal()` 을 호출하면 된다. 복호화도 마찬가지로 iv와 key가 있다면 cipher 객체를 만들고 mode, key, iv를 세팅한 후 `cipher.doFinal()`을 호출하기만 하면 된다. 아래에 예시 코드를 참고하기를 바란다.
+
+```
+public class CryptoUtil {
+    final private String iv = "";
+    final private String key = "";
+    final private Key keySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
+
+
+    private CryptoUtil() {
+
+    }
+
+
+    public String encrypt(String originalString) throws NoSuchAlgorithmException, GeneralSecurityException, UnsupportedEncodingException {
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, keySpec, new IvParameterSpec(iv.getBytes()));
+        byte[] encrypted = cipher.doFinal(originalString.getBytes(StandardCharsets.UTF_8));
+        return new String(Base64.encodeBase64(encrypted));
+    }
+
+
+    public String decrypt(String originalString) throws NoSuchAlgorithmException, GeneralSecurityException, UnsupportedEncodingException {
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, keySpec, new IvParameterSpec(iv.getBytes()));
+        return new String(cipher.doFinal(Base64.decodeBase64(originalString.getBytes())), StandardCharsets.UTF_8);
+    }
+}
+```
+
+
+## 8. Python에서의 AES
+
+Python에서는 [PyCryptodome](https://pycryptodome.readthedocs.io/en/latest/src/cipher/aes.html)에서 AES를 지원한다. document에도 나와있는 샘플을 참고하여 아래와 같이 암호화/복호화를 구현할 수 있다. 다만 Java에서는 padding이 별 다른 과정 없어도 `javax.crypto.Cipher` 객체를 생성할 때 어떤 알고리즘에 맞춰서 padding 되어야 하는지 명시만 해주면 라이브러리에서 잘 해줬는데, python은 한두줄 정도 따로 구현이 되어야 한다는 차이점은 있다.
+
+```
+from Crypto.Cipher import AES
+import base64
+
+block_size = 32
+pad = lambda s: s + (block_size - len(s) % block_size) * chr(block_size - len(s) % block_size)
+unpad = lambda s: s[0:ord(s[-1])]
+
+key = "some_letters_with_32bit"
+iv = "some_letters_with_16bit"
+
+def encode(plaintext):
+    cipher = AES.new(key, AES.MODE_CBC, IV=iv)
+    return base64.b64encode(cipher.encrypt(pad(plaintext)))
+
+def decode(ciphertext):
+    cipher = AES.new(key, AES.MODE_CBC, IV=iv)
+    return unpad(cipher.decrypt(base64.b64decode(ciphertext)))
+```
+
+
+## 8. 마치며
+
+Cryptography와 AES에 대해 겉핥기 식으로 알아보고 Java와 Python에서 이를 빠르게 적용할 수 있는 방법을 알아보았다. 현재의 연산 장비 성능이 너무 좋아진 나머지 AES-128도 안전하지 않다는 얘기를 들어본 것 같지만 그래도 여전히 AES알고리즘은 128, 192, 256 상관없이 권장되는 암호화 알고리즘이다. 다수의 언어들에서도 이를 쉽게 적용할 수 있도록 다양한 라이브러리들이 지원되고 있다. 이 글이 암호화에 대한 인식을 제고하고 나같이 암호화 알고리즘에 대해서 잘 모르는 사람들도 쉽게 암호화를 하는데 도움이 되길 바란다.
